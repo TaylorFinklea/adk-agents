@@ -1,0 +1,30 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+
+exporters:
+  # LangWatch Exporter
+  otlphttp/langwatch:
+    endpoint: "https://app.langwatch.ai/api/otel"
+    headers:
+      Authorization: "Bearer ${LANGWATCH_API_KEY}" # Use environment variable for secrets
+
+  # Langfuse Exporter (using Basic auth with base64-encoded credentials)
+  otlphttp/langfuse:
+    endpoint: "https://us.cloud.langfuse.com/api/public/otel"
+    headers:
+      Authorization: "Basic ${LANGFUSE_AUTH}"
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch] # Optional: batching can improve performance
+      exporters: [otlphttp/langwatch, otlphttp/langfuse] # Send to both exporters

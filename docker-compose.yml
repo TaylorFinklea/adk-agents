@@ -1,0 +1,21 @@
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest # Using latest for contrib, or pin to a specific version like 0.99.0
+    container_name: otel-collector
+    restart: unless-stopped # Good practice for services
+    command: ["--config=/etc/otelcol-contrib/config.yaml"] # Explicitly point to the config file
+    ports:
+      - "4317:4317" # OTLP gRPC receiver
+      - "4318:4318" # OTLP HTTP receiver
+      # Add other ports if you need to expose them, e.g., for Prometheus receiver or ZPages
+      # - "8888:8888" # For Collector metrics/zPages if enabled
+    volumes:
+      - ./config.yaml:/etc/otelcol-contrib/config.yaml:ro # Mount your collector config file
+    environment:
+      # Pass your API keys as environment variables for the collector to use
+      - LANGWATCH_API_KEY=${LANGWATCH_API_KEY}
+      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY}
+      - LANGFUSE_AUTH=${LANGFUSE_AUTH}
+      # Set LANGFUSE_AUTH in your environment as: echo -n "public_key:secret_key" | base64
+      # Make sure these environment variables are set in your shell or .env file

@@ -1,0 +1,27 @@
+[project]
+name = "adk-fun"
+version = "0.0.1"
+description = "Learning Python ADK"
+authors = [{ name = "Taylor Finklea", email = "taylor@novalark.ai" }]
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "google-adk",
+  "python-dotenv==1.1.0",
+  "google-adk[eval]",
+  "opentelemetry-sdk",
+  "opentelemetry-exporter-otlp",
+  "opentelemetry-instrumentation-requests",
+  "opentelemetry-instrumentation-urllib3",
+  "opentelemetry-instrumentation-logging",
+  "opik",
+  "google-cloud-aiplatform[adk,agent_engines]"
+]
+keywords = ["keyword1", "keyword2"]
+
+[project.optional-dependencies]
+test = ["pytest", "pytest-asyncio", "pytest-cov"]
+
+[project.urls]
+"Homepage" = "https://github.com/TaylorFinklea/adk-fun"
+"Bug Tracker" = "https://github.com/TaylorFinklea/adk-fun/issues"
+"Documentation" = "https://github.com/TaylorFinklea/adk-fun#readme"
