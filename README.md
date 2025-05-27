@@ -11,24 +11,6 @@ A comprehensive learning project for Google's Agent Development Kit (ADK) featur
 - **OpenTelemetry**: Full tracing and monitoring setup
 - **Evaluation Framework**: Built-in agent evaluation capabilities
 
-## 📁 Project Structure
-
-```
-adk/
-├── .env                          # Environment variables (use .env.example as template)
-├── .env.example                  # Template for environment setup
-├── config.yaml                   # OpenTelemetry collector configuration
-├── docker-compose.yml            # OTEL collector deployment
-├── pyproject.toml               # Python project configuration
-├── google-search-agent/         # Google Search AI agent
-│   ├── agent.py                 # Main agent implementation
-│   ├── interact.py              # Interactive testing script
-│   └── .env.example             # Agent-specific environment template
-└── multi-tool-agent/           # Multi-tool demonstration agent
-    ├── agent.py                 # Weather/time agent implementation
-    └── .env.example             # Agent-specific environment template
-```
-
 ## 🛠️ Prerequisites
 
 - Python 3.11+ (< 3.12)
@@ -40,14 +22,14 @@ adk/
 ### 1. Clone and Setup
 
 ```bash
-git clone <your-repo-url>
-cd adk
+git clone https://github.com/TaylorFinklea/adk-agents.git
+cd adk-agents
 ```
 
 ### 2. Install Dependencies
 
 ```bash
-pip install -e .
+uv pip install -e .
 ```
 
 ### 3. Environment Configuration
@@ -100,13 +82,18 @@ adk web multi-tool-agent
 
 ### Google Search Agent
 
-An intelligent search agent powered by Google's search capabilities.
+An intelligent search agent powered by Google's search capabilities with built-in security guardrails.
 
 **Capabilities:**
 - Real-time web search
 - Intelligent result synthesis
 - Fact-based responses
 - Source attribution
+- **🛡️ Security Features:**
+  - LLM-powered hijacking detection (Gemini Flash Lite)
+  - Pattern-based jailbreak prevention
+  - Input/output filtering
+  - Comprehensive security logging
 
 **Usage:**
 ```bash
@@ -270,7 +257,7 @@ root_agent = Agent(
 
 **"Module not found" errors:**
 ```bash
-pip install -e .
+uv pip install -e .
 ```
 
 **Authentication errors:**
@@ -288,12 +275,6 @@ Enable debug logging in interactive sessions:
 You: debug
 Debug mode: ON
 ```
-
-### Logs and Traces
-
-- Local logs: `agent_conversations.log`
-- Cloud traces: Google Cloud Console → Traces
-- OTEL collector logs: `docker-compose logs otel-collector`
 
 ## 📖 Resources
 
