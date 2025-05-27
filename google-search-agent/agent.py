@@ -4,7 +4,6 @@ import vertexai
 import os
 from dotenv import load_dotenv
 from vertexai.preview import reasoning_engines
-from .guardrails import guardrails, combine_callbacks
 
 # Load environment variables from .env file
 load_dotenv()
@@ -48,12 +47,12 @@ if DEPLOYMENT_MODE == "cloudrun":
             tools=AGENT_TOOLS,
             before_agent_callback=opik_tracer.before_agent_callback,
             after_agent_callback=opik_tracer.after_agent_callback,
-            before_model_callback=combine_callbacks(guardrails.before_model_callback, opik_tracer.before_model_callback),
-            after_model_callback=combine_callbacks(guardrails.after_model_callback, opik_tracer.after_model_callback),
+            before_model_callback=opik_tracer.before_model_callback,
+            after_model_callback=opik_tracer.after_model_callback,
             before_tool_callback=opik_tracer.before_tool_callback,
             after_tool_callback=opik_tracer.after_tool_callback,
         )
-        print("✓ Agent initialized with Opik observability + LLM-based security guardrails for Cloud Run")
+        print("✓ Agent initialized with Opik observability for Cloud Run")
     except ImportError:
         # Fallback without Opik
         root_agent = Agent(
@@ -62,10 +61,8 @@ if DEPLOYMENT_MODE == "cloudrun":
             description=AGENT_DESCRIPTION,
             instruction=AGENT_INSTRUCTION,
             tools=AGENT_TOOLS,
-            before_model_callback=guardrails.before_model_callback,
-            after_model_callback=guardrails.after_model_callback,
         )
-        print("⚠ Opik not available, using agent with LLM-based security guardrails only")
+        print("⚠ Opik not available, using agent without callbacks")
 else:
     # Agent Engine: Native tracing only (no Opik callbacks due to serialization)
     root_agent = Agent(
@@ -75,6 +72,7 @@ else:
         instruction=AGENT_INSTRUCTION,
         tools=AGENT_TOOLS,
     )
+    print("✓ Agent initialized for Agent Engine (native tracing)")
 
 # Wrap agent for tracing (for local testing and deployment)
 app = reasoning_engines.AdkApp(
@@ -150,7 +148,6 @@ if __name__ == "__main__":
     import sys
 
     print(f"Google Search Agent (Mode: {DEPLOYMENT_MODE.upper()})")
-    print("🛡️  LLM-based security guardrails enabled - resistant to hijacking attempts")
     print("=" * 50)
 
     if len(sys.argv) > 1:
